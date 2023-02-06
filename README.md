@@ -4,7 +4,7 @@
 
 ## Description
 
-We are creating an open source web application to speed up the process of transcribing notebooks in Bristol Museum. These notebooks contain important data on species, some of which are now extinct. Currently, transcribing a notebook takes a long time as a transcriber must learn the handwriting of each individual collector and manually transcribe the text into a digital format. 
+This is an open source web application to speed up the process of transcribing notebooks in Bristol Museum. These notebooks contain important data on species, some of which are now extinct. Currently, transcribing a notebook takes a long time as a transcriber must learn the handwriting of each individual collector and manually transcribe the text into a digital format. 
 
 
 ## Features
