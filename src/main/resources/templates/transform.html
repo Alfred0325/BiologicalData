@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Transcribe</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="./css/transform-style.css">
+    <link rel="stylesheet" href="./SimpleImageViewer-master/css/style.css" />
+    <link rel="icon" href="./image/museum-related/bristol-culture-logo-circle.png" type="image/x-icon">
+    <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+</head>
+
+<body>
+<div class="header" id="header">
+    <span><img src="./image/museum-related/bristol-culture-logo-removebg-preview.png" style="max-width:250px; height :70px;" /></span>
+    <a class="active" href="/">Home</a>
+    <a href="/selection">Select</a>
+    <a sec:authorize="isAuthenticated()" class="btn btn-outline-light" th:href="@{/logout}">Log Out</a>
+</div>
+<hr style="height: 3px;">
+<main>
+    <div class="row">
+        <div class="column">
+            <form method="POST" enctype="multipart/form-data" th:action="@{/transform/upload}">
+                <strong><p>You can upload the picture here:&nbsp;</p></strong>
+                <input type="file" accept=".png,.jpeg,.jpg" name="file">
+                <input type="submit">
+            </form>
+        </div>
+        <div class="column">
+            <button onclick="location.href='/transform/swap'" type="button">Swap image/text location</button>
+            <button onclick="location.href='/transform/translate'" type="button">Translate text</button>
+        </div>
+        <div class="column">
+            <b><span>You can download the file here:&nbsp; </span></b>
+            <button class="btn" onclick="location.href='/transform/download'" type="button">Download</button>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        <div class="column" th:switch="${imageLeft}">
+            <div class="content" th:case="true">
+                <!--IMAGE VIEWER-->
+                <p th:text="${filename}"></p>
+                <div th:if="${filename != null}" style="overflow: scroll;">
+                    <div align="left" style="margin-left: 200px">
+                        <form action="#" th:action="@{/transform/author}" th:object="${authorInfo}" method="post">
+                            <label>Author:</label>
+                            <select th:field="*{authorID}">
+                                <option th:value="-1">Create New...</option>
+                                <a th:each="author:${authors}">
+                                    <option th:value="${author.authorID}"
+                                            th:text="${author.titleToString() + ' ' + author.authorForename + ' ' + author.authorSurname}">
+                                    </option>
+                                </a>
+                            </select>
+                            <div>
+                                <label>Title</label>
+                                <select th:field="*{authorTitle}">
+                                    <option th:value="0">Dr.</option>
+                                    <option th:value="1">Prof.</option>
+                                    <option th:value="2">Mr.</option>
+                                    <option th:value="3">Mrs.</option>
+                                    <option th:value="4">Miss.</option>
+                                    <option th:value="5">Master</option>
+                                </select><br>
+                                <label>Forename</label>
+                                <input type="text" th:field="*{authorForename}" placeholder="Author Forename"><br>
+                                <label>Surname</label>
+                                <input type="text" th:field="*{authorSurname}" placeholder="Author Surname"><br>
+                                <button type="submit" class="btn btn-primary">Update Author</button>
+                            </div>
+                        </form>
+                        <form action="#" th:action="@{/transform/date}" th:object="${datewritten}" method="post">
+                            <label>Date Published:</label>
+                            <input type="date" th:field="*{date}"><br>
+                            <button type="submit" class="btn btn-primary">Update Date</button>
+                        </form>
+                    </div>
+                    <div id="viewerButtonArea">
+                        <button onclick="rotate(-1)" class="btn btn-primary">Rotate Left</button>
+                        <button onclick="rotate(1)" class="btn btn-primary">Rotate Right</button>
+                        <button onclick="zoom(-1)" class="btn btn-primary">Zoom Out</button>
+                        <button onclick="zoom(1)" class="btn btn-primary">Zoom In</button>
+                        <button onclick="scaleImages('vertical')" class="btn btn-primary">Fit Height</button>
+                        <button onclick="scaleImages('horizontal')" class="btn btn-primary">Fit Width</button>
+                    </div>
+                    <div id="imageArea" style="width: 688px; height: 494px; border: 1px solid #666;">
+                        <div>
+                            <img id="imageScan1" style="display: none" th:src="@{${'./dynamic/' + filename}}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content" th:case="false">
+                <!--TEXT EDITOR-->
+                <form action="#" th:action="@{/transform/submit/0}" th:object="${transcription}" method="post">
+                    <input type="text" th:field="*{name}" placeholder="Transcription Name">
+                    <br>
+                    <textarea type="text" th:field="*{text}" rows="35" cols="100"></textarea>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="column" th:switch="${imageLeft}">
+            <div class="content" th:case="true">
+                <!--TEXT EDITOR-->
+                <form action="#" th:action="@{/transform/submit/0}" th:object="${transcription}" method="post">
+                    <input type="text" th:field="*{name}" placeholder="Transcription Name">
+                    <br>
+                    <textarea type="text" th:field="*{text}" rows="35" cols="100"></textarea>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="content" th:case="false">
+                <!--IMAGE VIEWER-->
+                <p th:text="${filename}"></p>
+                <div th:if="${filename != null}" style="overflow: scroll;">
+                    <div align="left" style="margin-left: 200px">
+                        <form action="#" th:action="@{/transform/author}" th:object="${authorInfo}" method="post">
+                            <label>Author:</label>
+                            <select th:field="*{authorID}">
+                                <option th:value="-1">Create New...</option>
+                                <a th:each="author:${authors}">
+                                    <option th:value="${author.authorID}"
+                                            th:text="${author.titleToString() + ' ' + author.authorForename + ' ' + author.authorSurname}">
+                                    </option>
+                                </a>
+                            </select>
+                            <div>
+                                <label>Title</label>
+                                <select th:field="*{authorTitle}">
+                                    <option th:value="0">Dr.</option>
+                                    <option th:value="1">Prof.</option>
+                                    <option th:value="2">Mr.</option>
+                                    <option th:value="3">Mrs.</option>
+                                    <option th:value="4">Miss.</option>
+                                    <option th:value="5">Master</option>
+                                </select><br>
+                                <label>Forename</label>
+                                <input type="text" th:field="*{authorForename}" placeholder="Author Forename"><br>
+                                <label>Surname</label>
+                                <input type="text" th:field="*{authorSurname}" placeholder="Author Surname"><br>
+                                <button type="submit" class="btn btn-primary">Update Author</button>
+                            </div>
+                        </form>
+                        <form action="#" th:action="@{/transform/date}" th:object="${datewritten}" method="post">
+                            <label>Date Published:</label>
+                            <input type="date" th:field="*{date}"><br>
+                            <button type="submit" class="btn btn-primary">Update Date</button>
+                        </form>
+                    </div>
+                    <div id="viewerButtonArea">
+                        <button onclick="rotate(-1)" class="btn btn-primary">Rotate Left</button>
+                        <button onclick="rotate(1)" class="btn btn-primary">Rotate Right</button>
+                        <button onclick="zoom(-1)" class="btn btn-primary">Zoom Out</button>
+                        <button onclick="zoom(1)" class="btn btn-primary">Zoom In</button>
+                        <button onclick="scaleImages('vertical')" class="btn btn-primary">Fit Height</button>
+                        <button onclick="scaleImages('horizontal')" class="btn btn-primary">Fit Width</button>
+                    </div>
+                    <div id="imageArea" style="width: 688px; height: 494px; border: 1px solid #666;">
+                        <div>
+                            <img id="imageScan1" style="display: none" th:src="@{${'./dynamic/' + filename}}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<hr style="height: 1px; background-color: black">
+<footer>
+    <p style="text-align:center;">© 2020 Biological Data, All Rights Reserved.</p>
+</footer>
+
+<script src="./SimpleImageViewer-master/script/image-viewer.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Selection</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="./css/transform-style.css">
+    <link rel="icon" href="./image/museum-related/bristol-culture-logo-circle.png" type="image/x-icon">
+    <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+</head>
+
+<body>
+<div class="header" id="header">
+    <span><img src="./image/museum-related/bristol-culture-logo-removebg-preview.png" style="max-width:250px; height :70px;" /></span>
+    <a class="active" href="/">Home</a>
+    <a href="/transform">Transcribe</a>
+    <a sec:authorize="isAuthenticated()" class="btn btn-outline-light" th:href="@{/logout}">Log Out</a>
+    </a>
+</div>
+<hr style="height: 3px;">
+<main>
+    <!--SEARCH FILTER-->
+    <div class="row">
+        <form action="#" th:action="@{/selection/updatefilter}" th:object="${filterinfo}">
+            <label>Show Jobs</label>
+            <select th:field="*{showOnlyUserJobs}">
+                <option value="0">All Jobs</option>
+                <option value="1">Only My Jobs</option>
+            </select>
+            <label>Show Author</label>
+            <select th:field="*{showAuthor}">
+                <option value="0">All Authors</option>
+                <a th:each="author:${authors}">
+                    <option th:value="${author.authorID}">
+                        <span th:text="${author.titleToString() + ' ' + author.authorForename + ' ' + author.authorSurname}"></span>
+                    </option>
+                </a>
+            </select>
+            <label>Sort By</label>
+            <select th:field="*{sortBy}">
+                <option value="0">Page ID</option>
+                <option value="1">Page Name</option>
+                <option value="2">Page Date</option>
+            </select>
+            <label>Direction</label>
+            <select th:field="*{direction}">
+                <option value="0">Ascending</option>
+                <option value="1">Descending</option>
+            </select>
+            <label>Image Name</label>
+            <input type="text" th:field="*{imageName}" placeholder="Image Filename">
+            <button type="submit" class="btn btn-primary">Update Filter</button>
+        </form>
+        <form action="#" th:action="@{/selection/clearfilter}" th:object="${filterinfo}">
+            <button type="submit" class="btn btn-primary">Clear Filter</button>
+        </form>
+    </div>
+    <!--TABLE-->
+    <table class="sortable">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Thumbnail</th>
+            <th>Author</th>
+            <th>Existing Transcriptions</th>
+            <th>Last Updated</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="page:${pages}">
+            <td><span th:text="${page.pageID}"></span></td>
+            <td>
+                <a th:href="${'transform/page/' + page.pageID}">
+                    <p th:text="${page.pageFile}" style="word-wrap: break-word; width: 500px;"></p>
+                </a>
+            </td>
+            <td>
+                <img th:src="${'../dynamic/' + page.pageFile}" height="100"/>
+                <a th:href="${'selection/deletepage/' + page.pageID}"><img alt="" src="./image/icons/origin/delete-icon.png" width="17"></a>
+            </td>
+            <td><a th:each="author:${authors}">
+                <span th:if="${author == page.authorID}" th:text="${author.titleToString() + ' ' + author.authorForename + ' ' + author.authorSurname}"></span>
+            </a></td>
+            <td><a th:each="job:${jobs}">
+                <div th:if="${job.pageID == page}">
+                    <a th:href="${'transform/job/' + job.jobID}"><span th:text="${job.jobFile}"></span></a>
+                    <a th:href="${'selection/deletejob/' + job.jobID}"><img alt="" src="./image/icons/origin/delete-icon.png" width="17"></a>
+                    <br>
+                </div></a>
+            </td>
+            <td><a th:each="job:${jobs}">
+                <div th:if="${job.pageID == page}">
+                    <span th:text="${job.dateSubmitted}"></span>
+                    <br>
+                </div></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<hr style="height: 1px; background-color: black">
+<footer>
+    <p style="text-align:center;">© 2020 Biological Data, All Rights Reserved.</p>
+
+</footer>
+</body>
+
+</html>

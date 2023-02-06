@@ -1,0 +1,141 @@
+body {
+    background-color: rgb(209, 204, 204);
+    font-family: Arial;
+    padding: 0px;
+}
+
+.header a {
+    display: inline-block;
+    color: Black;
+    text-align: center;
+    padding: 7px;
+    margin: 7px;
+    text-decoration: none;
+    font-size: 17px;
+    border-radius: 5px;
+    vertical-align: middle;
+}
+
+.header a.active {
+    color: black;
+    font-weight: bold;
+}
+
+.header a:hover {
+    /*color: #B54434;*/
+    color: #2EA9DF
+}
+
+.header .sign {
+    float: right;
+}
+
+.header img {
+    vertical-align: middle;
+    height: 50px;
+    width: 10%;
+}
+
+.btn {
+    /*background-color: #B54434;*/
+    border: none;
+    color: black;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn:hover {
+    color: #2EA9DF
+    /*color: #B54434;*/
+}
+
+.row {
+    display: flex;
+    margin: 8px -16px;
+}
+
+.row,
+.row>.column {
+    padding: 8px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.column {
+    display: table;
+    text-align: center;
+    width: 100%;
+    height: auto;
+}
+
+.content {
+    height: auto;
+    overflow: visible;
+    border: 2px solid black;
+    display: table-cell;
+    background-color: white;
+    padding: 10px;
+}
+
+.footer {
+
+}
+
+.content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.rotate0 {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    width: 100%;
+}
+
+.rotate90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+    width: 100%;
+    margin-top: 25%;
+}
+
+.rotate180 {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+    width: 100%;
+}
+
+.rotate270 {
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg);
+    width: 100%;
+    margin-top: 25%;
+}
